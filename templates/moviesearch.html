@@ -1,0 +1,23 @@
+{% raw %}
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Search movie for: {{pc.video.Path}}</h3>
+</div>
+<div class="modal-body" id="modal-body">
+
+    <input type="text" ng-model="textSearch" ng-enter="searchMovie()" placeholder="search for movie" class="input-sm form-control"/>
+    <table class="table table-sm table-hover">
+        <tr ng-repeat="movie in pc.movies">
+            <td><input type="radio" name="movie" ng-model="pc.selectMovieId" value="{{movie.id}}"></td>
+            <td><img src="https://image.tmdb.org/t/p/w500{{movie.poster_path}}" class="img-fluid" alt="Responsive image"></td>
+            <td>
+                <h6>{{movie.title}} - {{movie.release_date}}</h6>
+                <p class="text-warp">{{movie.overview}}</p>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="pc.ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="pc.cancel()">Cancel</button>
+</div>
+{% endraw %}

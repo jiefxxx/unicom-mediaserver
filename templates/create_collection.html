@@ -1,0 +1,15 @@
+{% raw %}
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Create Collection</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <div class="form-group">
+        <input type="text" class="form-control" id="exampleInputEmail1"  placeholder="Enter title" ng-model="title">
+        <textarea class="form-control"  placeholder="description" rows="3" ng-model="description"></textarea>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="pc.ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="pc.cancel()">Cancel</button>
+</div>
+{% endraw %}

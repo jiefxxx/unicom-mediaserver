@@ -1,0 +1,11 @@
+{% import "mediaserver/nav.html" as macros %}
+{% extends "base.html" %}
+{% block title %}MediaServer{% endblock title %}
+{% block content %}
+{{ macros::nav(current="index") }}
+
+
+<div class="container-fluid">
+    <h1>MediaServer</h1>
+</div>
+{% endblock content %}

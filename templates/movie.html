@@ -1,0 +1,157 @@
+{% import "mediaserver/nav.html" as macros %}
+{% extends "base.html" %}
+{% block title %}MediaServer - movie {% endblock title %}
+{% block script %}
+<script type="text/javascript" src="/mediaserver/js/base.js"></script>
+<script type="text/javascript" src="/mediaserver/js/movies.js"></script>
+{% endblock script %}
+{% block content %}
+{{ macros::nav(current="movie") }}
+<div class="container-fluid">
+    <div class="bg row" ng-app="unicom_server" ng-controller="movieController" style="
+                background-image: url('/mediaserver/rsc/original{{backdrop_path}}');
+                height: 100%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+              ">
+        <div class="container-fluid" style="
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px;">
+            <div class="row">
+                <div class="col-2">
+                    <img class="img-fluid rounded" src="/mediaserver/rsc/original{{poster_path}}" onerror="this.src='/rsc/poster_empty.jpg'" alt="Card image cap">
+                </div>
+                <div class="col-10 text-white" >
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="d-inline font-weight-bold ">{{title}} </h1> <h2 class="d-inline font-italic"> - ({{original_title}})</h2>
+                        </div>
+                        <div class="col-2">
+                            <a class="float-right" href="" ng-click="edit_movie([
+                            {% for v in video %}
+                            {{v.id}},
+                            {%endfor%}
+                            ])"><img src="/rsc/edit.png" alt="" width="32" height="32"></a>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <h4 class="col-auto font-weight-bold">
+                            {{release_date}} *
+                            {% for genre in genres %}
+                                <a href="#">{{genre}},</a>
+                            {% endfor %}
+                        </h4>
+                    </div>
+                    <div class="row">
+
+
+                    </div>
+
+                    <br>
+                    <div class="row">
+                        <h1 class="col-auto d-inline font-weight-bold align-top">{{vote_average}}</h1>
+                        <label class="col-auto align-bottom">
+                            <input ng-show="false" type="checkbox" class="toggle-button"  ng-model="watched" ng-init="watched = {{watched > 0}}" ng-change="set_watched({{id}})">
+                            {% raw %}
+                            <img ng-src="{{watched_image}}" alt="" width="32" height="32">
+                            {% endraw %}
+                        </label>
+                        <a class="col-auto align-bottom" href="#"><img src="/rsc/heart-empty.png" alt="" width="32" height="32"></a>
+                        <a href="#" ng-click="add_to_collection({{id}})"><img src="/rsc/plus.png" alt="" width="32" height="32"></a>
+                    </div>
+                    <br>
+                    <div class="row"> <h5 class="font-italic col-12">{{tagline}}</h5> </div>
+                    <div class="row"> <p class="font-italic col-12">{{overview}}</p> </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-auto">
+                            <h4>Trailer</h4>
+                            {% for t in trailer %}
+                            <a href="https://www.youtube.com/watch?v={{t.youtube_id}}">{{t.name}}</a><br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-4">
+                            <h4>Réalisateur</h4>
+                            {% for c in crew %}
+                                {%if c.job == "Director"%}
+                                    <a href="/mediaserver/person/{{c.id}}">{{c.name}}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-4">
+                            <h4>Metteur en Scène</h4>
+                            {% for c in crew %}
+                                {%if c.job == "Screenplay"%}
+                                    <a href="/mediaserver/person/{{c.id}}">{{c.name}}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-4">
+                            <h4>Producteur</h4>
+                            {% for c in crew %}
+                                {%if c.job == "Producer"%}
+                                    <a href="/mediaserver/person/{{c.id}}">{{c.name}}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <table class="table text-white">
+                    {% for video in video %}
+                    <tr>
+                        <td>
+                            <a href="#"><img src="/rsc/play.png" alt="" width="32" height="32"></a>
+                            <a href="#"><img src="/rsc/download.png" alt="" width="32" height="32"></a>
+                        </td>
+                        <td><a href="/mediaserver/video/{{video.id}}"><h5>{{video.path}}</h5></a></td>
+                        <td>{{video.size | bytes}}</td>
+                        <td>{{video.duration | duration}}</td>
+                        <td>
+                            Audios:
+                            {% for audio in video.audios %}
+                            {{audio}},
+                            {% endfor %}
+                        </td>
+                        <td>
+                            Subtitles:
+                            {% for subtitle in video.subtitles %}
+                            {{subtitle}},
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <a class="float-right" href="" ng-click="delete_video({{video.id}})"><img src="/rsc/trash-bin.png" alt="" width="32" height="32"></a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="
+            padding-top: 10px;
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;">
+        {% for actor in cast | sort(attribute="ord")%}
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" style="display: inline-block;">
+			<div class="card" >
+				<img class="card-img-top rounded" src="/mediaserver/rsc/original{{actor.profile_path}}" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title font-italic">{{actor.character}}</h4>
+                    <p class="card-text"><a href="/mediaserver/person/{{actor.id}}">{{actor.name}}</a></p>
+              </div>
+            </div>
+		</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

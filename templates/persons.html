@@ -1,0 +1,41 @@
+{% import "mediaserver/nav.html" as macros %}
+{% extends "base.html" %}
+{% block title %}MediaServer - Movies{% endblock title %}
+{% block script %}
+<script type="text/javascript" src="/mediaserver/js/base.js"></script>
+<script type="text/javascript" src="/mediaserver/js/person.js"></script>
+{% endblock script %}
+{% block content %}
+
+{{ macros::nav(current="movie") }}
+
+<div class="container-fluid" ng-app="unicom_server" ng-controller="personTable">
+	<div class="row input-group mb-3 sticky-top mx-auto" style="padding-top: 15px; z-index: 1;">
+		<div class="input-group-prepend">
+
+		</div>
+		<input class="form-control" id="inputGroup-sizing-default" placeholder="Search movie ..." type="text" ng-model="searchText">
+		<div class="input-group-append">
+			<select class="custom-select" ng-model="orderValue">
+				<option selected value="title">Title</option>
+				<option selected value="-birthday">Naissance</option>
+				<option selected value="-popularity">Popularité</option>
+			</select>
+			<button class="btn btn-outline-secondary" type="button" ng-click="reversSelection()">Revers</button>
+		</div>
+	</div>
+	<div class="row overflow-y-auto">
+		<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6" ng-repeat="row in collection | filter: movieFilter | orderBy: orderValue | limitTo:pageSize">
+			{% raw %}
+			<div class="card" >
+				<a href="/mediaserver/person/{{row.id}}">
+					<img class="card-img-top" src="/mediaserver/rsc/original{{row.profile_path}}" alt="Card image cap">
+					<p class="card-text">{{row.name}}</p>
+				</a>
+			</div>
+			{% endraw %}
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

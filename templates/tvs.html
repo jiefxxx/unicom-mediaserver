@@ -1,0 +1,46 @@
+{% import "mediaserver/nav.html" as macros %}
+{% extends "base.html" %}
+{% block title %}MediaServer - Tvs{% endblock title %}
+{% block script %}
+<script type="text/javascript" src="/mediaserver/js/base.js"></script>
+<script type="text/javascript" src="/mediaserver/js/tvs.js"></script>
+{% endblock script %}
+{% block content %}
+
+{{ macros::nav(current="tv") }}
+
+<div class="container-fluid" ng-app="unicom_server" ng-controller="tvTable">
+	<div class="row input-group mb-3 sticky-top mx-auto" style="padding-top: 15px; z-index: 1;">
+		<div class="input-group-prepend">
+			<select class="custom-select" ng-model="searchGenre">
+				<option selected value="">All</option>
+				{% raw %}
+				<option ng-repeat="genre in genres" value="{{genre}}">{{genre}}</option>
+				{% endraw %}
+			</select>
+		</div>
+		<input class="form-control" id="inputGroup-sizing-default" placeholder="Search movie ..." type="text" ng-model="searchText">
+		<div class="input-group-append">
+			<select class="custom-select" ng-model="orderValue">
+				<option selected value="title">Title</option>
+				<option selected value="-adding">Adding</option>
+				<option selected value="-release_date">Release</option>
+				<option selected value="-vote_average">Vote</option>
+			</select>
+			<button class="btn btn-outline-secondary" type="button" ng-click="reversSelection()">Revers</button>
+		</div>
+	</div>
+	<div class="row overflow-y-auto">
+		<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6" ng-repeat="row in collection | filter: tvFilter | orderBy: orderValue | limitTo:pageSize">
+			{% raw %}
+			<div class="card" >
+				<a href="/mediaserver/tv/{{row.id}}">
+					<img class="card-img-top" src="/mediaserver/rsc/original{{row.poster_path}}" alt="Card image cap">
+				</a>
+			</div>
+			{% endraw %}
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

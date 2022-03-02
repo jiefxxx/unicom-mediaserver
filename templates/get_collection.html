@@ -1,0 +1,27 @@
+{% raw %}
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Get Collection</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <table class="table table-sm table-hover">
+        <thead>
+            <tr>
+                <input ng-model="searchText" class="form-control" id="inputGroup-sizing-default" placeholder="global search videos ..." type="text">
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-success" ng-repeat="collection in local | orderBy:'-'" ng-click="setSelected(collection.id, collection.name)" ng-class="{'table-active': collection.id === idSelected}">
+                <td>{{collection.id}} - {{collection.name}}</td>
+            </tr>
+            <tr ng-repeat="collection in collections | filter: myFilter" ng-click="setSelected(collection.id, collection.name)" ng-class="{'table-active': collection.id === idSelected}">
+                <td>{{collection.id}} - {{collection.name}}</td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="pc.ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="pc.cancel()">Cancel</button>
+</div>
+{% endraw %}

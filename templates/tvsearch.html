@@ -1,0 +1,31 @@
+{% raw %}
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Edit Tv Show</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <table class="table table-sm table-hover">
+        <tr ng-repeat="video in pc.videos">
+            <td>{{video.Path}}</td>
+            <td><input type="number" name="input" ng-model="video.Season"
+                min="0" max="99" required></td>
+            <td><input type="number" name="input" ng-model="video.Episode"
+                min="0" max="99" required></td>
+        </tr>
+    </table>
+    <input type="text" ng-model="textSearch" ng-enter="searchTvShow()" placeholder="search for tv show" class="input-sm form-control"/>
+    <table class="table table-sm table-hover">
+        <tr ng-repeat="tvShows in pc.tvShows">
+            <td><input type="radio" name="tvs" ng-model="pc.selectTvShowsId" value="{{tvShows.id}}"></td>
+            <td><img src="https://image.tmdb.org/t/p/w500{{tvShows.poster_path}}" class="img-fluid" alt="Responsive image"></td>
+            <td>
+                <h6>{{tvShows.name}}</h6>
+                <p class="text-warp">{{tvShows.overview}}</p>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="pc.ok()">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="pc.cancel()">Cancel</button>
+</div>
+{% endraw %}

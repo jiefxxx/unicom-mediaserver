@@ -1,0 +1,70 @@
+{% import "mediaserver/nav.html" as macros %}
+{% extends "base.html" %}
+{% block title %}MediaServer - Collection{% endblock title %}
+{% block script %}
+{% endblock script %}
+{% block content %}
+{{ macros::nav(current="collection") }}
+<div class="container-fluid">
+    <div class="bg row">
+        <div class="container-fluid" style="
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px;">
+            <div class="row">
+                <div class="col-2">
+                    <img class="img-fluid rounded" src="/mediaserver/rsc/original{{poster_path}}" onerror="this.src='/rsc/poster_empty.jpg'" alt="Card image cap">
+                </div>
+                <div class="col-10 text-white" >
+                    <div class="row">
+                        <div class="col-10">
+                            <h1 class="d-inline font-weight-bold ">{{name}} </h1>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <h4 class="col-auto font-weight-bold">
+                            {{creator}}
+                        </h4>
+                    </div>
+                    <div class="row">
+                        <h4 class="col-auto font-weight-bold">
+                           {{creation_date}}
+                        </h4>
+                    </div>
+                    <br>
+                    <div class="row"> <p class="font-italic col-12">{{description}}</p> </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row overflow-y-auto">
+        {% for m in movie%}
+		<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6" >
+			<div class="card" >
+				<a href="/mediaserver/movie/{{m.id}}">
+                    <img class="card-img-top" src="/mediaserver/rsc/original{{m.poster_path}}" onerror="this.src='/rsc/poster_empty.jpg'" alt="Card image cap">
+				</a>
+                <div class="card-body">
+                    <h4 class="card-title font-italic">{{m.title}}</h4>
+                </div>
+			</div>
+		</div>
+        {% endfor %}
+	</div>
+    <div class="row overflow-y-auto">
+        {% for t in tv%}
+		<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6" >
+			<div class="card" >
+				<a href="/mediaserver/tv/{{t.id}}">
+                    <img class="card-img-top" src="/mediaserver/rsc/original{{t.poster_path}}" onerror="this.src='/rsc/poster_empty.jpg'" alt="Card image cap">
+				</a>
+                <div class="card-body">
+                    <h4 class="card-title font-italic">{{t.title}}</h4>
+                </div>
+			</div>
+		</div>
+        {% endfor %}
+	</div>
+</div>
+{% endblock content %}
