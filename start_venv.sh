@@ -1,3 +1,3 @@
 #!/bin/sh
 
-source ../mediaserver_venv/bin/activate
+. ../mediaserver_venv/bin/activate

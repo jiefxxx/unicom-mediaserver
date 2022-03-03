@@ -104,10 +104,11 @@ class Server:
         for r, d, f in os.walk(path):
             for file in f:
                 template_location = os.path.join(base, r[len(path):], file)
-                filename = os.path.abspath(os.path.join(r, file))
+                filename = os.path.join(r, file)
                 self.add_template(filename, template_location)
 
     def add_template(self, file, path):
+        file = os.path.abspath(file)
         self.l_template.append((file, path))
 
     def add_api_handler(self, handler):
