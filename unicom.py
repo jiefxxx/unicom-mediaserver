@@ -127,6 +127,7 @@ class Server:
         self.l_end_points.append(("api", path, api_id))
 
     def add_static_file(self, path, static_path):
+        static_path = os.path.abspath(static_path)
         self.l_end_points.append(("static", path, static_path))
 
     def add_dynamic_file(self, path, handler):

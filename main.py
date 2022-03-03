@@ -239,6 +239,6 @@ if __name__ == '__main__':
 
     s.add_dynamic_file(r"^/stream(?:/(\d+))$", StreamHandler)
 
-    s.add_static_file(r"^/js/(.*\.js)$", "./js/")
+    s.add_static_file(r"^/js/(.*\.js)$", "js/")
     s.add_static_file(r"^/rsc/(.*)$", config["rsc"]+"/")
     asyncio.run(s.serve_forever())
