@@ -1,9 +1,9 @@
-db = "/media/movie1/mediaserver.db"
+db = ".mediaserver.db"
 stream = "/tmp/test2.stream"
-rsc = "/media/movie1/mediaserver_rsc"
+rsc = "/home/jief/rsc"
 [tmdb]
     key = "bd00b4d04b286b876c3455692a531120"
     language = "fr"
 [path]
-    movie = ["/media/movie1/saved_movie", "/media/movie2/movies/2", "/media/movie3"]
-    tv = ["/media/tvshow"]
+    movie = ["/home/jief/Vidéos/movies"]
+    tv = ["/home/jief/Vidéos/tvs"]

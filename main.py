@@ -10,6 +10,11 @@ from medialibrary import Library, Tmdb
 
 medialibrary.tmdb_init(config["tmdb"]["key"], config["tmdb"]["language"])
 
+async def shell(cmd):
+    proc = await asyncio.create_subprocess_shell(cmd)
+    await proc.communicate()
+    return proc.returncode
+
 class IndexHandler:
     @staticmethod
     async def GET():
@@ -29,12 +34,10 @@ class TvSearchHandler:
 class PersonHandler:
     @staticmethod
     async def GET(server, url, user: str):
-        print(user)
         if len(url[1]) > 0:
             person = server.library.person(user, int(url[1]))
             person.set_movie()
             person.set_tv()
-            print(person)
             return person.json().encode()
         else:
             return server.library.persons(user).json_results().encode()
@@ -42,13 +45,11 @@ class PersonHandler:
 class MovieHandler:
     @staticmethod
     async def GET(server, url, user: str):
-        print(user)
         if len(url[1]) > 0:
             movie = server.library.movie(user, int(url[1]))
             movie.set_videos()
             movie.set_persons()
             movie.set_trailers()
-            print(movie)
             return movie.json().encode()
         else:
             return server.library.movies(user).json_results().encode()
@@ -57,15 +58,15 @@ class MovieHandler:
     async def PUT(server, url, input_data: "Json", user: str):
         if len(url[1]) > 0:
             if "watched" in input_data:
-                print(f'edit {input_data["watched"]}')
                 server.library.movie(user, int(url[1])).set_watched(input_data["watched"])
 
 class TvHandler:
     @staticmethod
-    async def GET(server, url, user: str):
-        print(url)
+    async def GET(server, url, user: str, episode_id: int = None):
         if len(url) >= 4 and len(url[1]) > 0 and len(url[2]) > 0 and len(url[3]) > 0:
             episode = server.library.tv_episode(user,  int(url[1]), int(url[2]),  int(url[3]))
+            if episode is None:
+                raise UnicomException("NotFound", "episode not found")
             episode.set_tv()
             episode.set_season()
             episode.set_videos()
@@ -86,6 +87,8 @@ class TvHandler:
             return tv.json().encode()
 
         else:
+            if episode_id is not None:
+                return server.library.tv_episodes(user).id(episode_id).json_results().encode()
             return server.library.tvs(user).json_results().encode()
 
     @staticmethod
@@ -102,14 +105,13 @@ class TvHandler:
 
 class StreamHandler:
     @staticmethod
-    async def GET():
-        return b"{}"
+    async def GET(server, url):
+        return server.library.video("reader", int(url[1])).path.encode()
 
 
 class CollectionHandler:
     @staticmethod
     async def GET(server, url, user: str, restrict: int = 0):
-        print(user)
         if len(url[1]) > 0:
             collection = server.library.collection(user, int(url[1]))
             collection.set_movie()
@@ -117,7 +119,6 @@ class CollectionHandler:
             return collection.json().encode()
         else:
             collections = server.library.collections(user)
-            print(restrict)
             if restrict:
                 collections.restrict()
 
@@ -149,19 +150,34 @@ class CollectionHandler:
 
 class VideoHandler:
     @staticmethod
-    async def GET(server, url, user: str):
+    async def GET(server, url, user: str, media_id: int=None, media_type: str=None):
         if len(url[1]) > 0:
             video = server.library.video(user, int(url[1]))
             return video.json().encode()
         else:
-            return server.library.videos(user).json_results().encode()
+            search = server.library.videos(user)
+            if media_id:
+                search.media_id(media_id)
+            if media_type == "movie":
+                search.movie()
+            if media_type == "tv":
+                search.tv()
+            return search.json_results().encode()
+
+    @staticmethod
+    async def POST(input_data: "Json"):
+        if "movieID" in input_data:
+            ret = await shell(f"python3 local_maker.py '{input_data['path']}' movie {input_data['movieID']}")
+        elif "tvID" in input_data:
+            ret = await shell(f"python3 local_maker.py '{input_data['path']}' tv {input_data['tvID']} {input_data['season']} {input_data['episode']}")
+        else:
+            raise Exception(f"media info invalid {input_data}")
+        if ret < 0:
+            raise Exception(f"local_maker error code :{ret}")
+        return b"{'created':'ok'}"
 
     @staticmethod
     async def PUT(server, url, input_data: "Json", user: str):
-        print(url)
-
-        if user != "root":
-            raise Exception("Not allowed")
 
         if len(url[1]) == 0:
             raise Exception("Error no video id")
@@ -171,16 +187,16 @@ class VideoHandler:
         if video is None:
             raise Exception("Error video not found")
 
-        if url[2] == "edit_media":
-            if video.media_type == 0:
-                video.set_movie(input_data["movie_id"])
-            elif video.media_type == 1:
-                video.set_tv(input_data["tv_id"],
-                             input_data["season_number"],
-                             input_data["episode_number"])
+        if "movie_id" in input_data:
+            video.set_movie(input_data["movie_id"])
 
-        elif url[2] == "set_watch_time":
-            video.set_watch_time(input_data["current_time"])
+        elif "tv_id" in input_data:
+            video.set_tv(input_data["tv_id"],
+                         input_data["season_number"],
+                         input_data["episode_number"])
+
+        elif "watch_time" in input_data:
+            video.set_watch_time(input_data["watch_time"])
 
         return b"{}"
 
@@ -199,7 +215,6 @@ class VideoHandler:
             raise Exception("Error no video id")
 
         return b"{}"
-
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -237,7 +252,7 @@ if __name__ == '__main__':
     s.add_api(r"^/api/moviesearch$", MovieSearchHandler)
     s.add_api(r"^/api/tvsearch$", TvSearchHandler)
 
-    s.add_dynamic_file(r"^/stream(?:/(\d+))$", StreamHandler)
+    s.add_dynamic_file(r"^/stream/(\d+)$", StreamHandler)
 
     s.add_static_file(r"^/js/(.*\.js)$", "js/")
     s.add_static_file(r"^/rsc/(.*)$", config["rsc"]+"/")

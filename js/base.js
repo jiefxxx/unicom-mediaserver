@@ -1,56 +1,3 @@
-
-app.directive('ngEnter', function() {
-    return function(scope, element, attrs) {
-        element.bind("keydown keypress", function(event) {
-            if(event.which === 13) {
-                scope.$apply(function(){
-                    scope.$eval(attrs.ngEnter, {'event': event});
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-})
-
-app.directive("bytes", function(){
-    return {
-        restrict: 'E',
-        template: '{{convertBytes(size)+add}}',
-        scope: {
-            size: '=',
-            add: '='
-          },
-        controller: function($scope, $element) {
-            $scope.convertBytes = function(value){
-                if (value == 0){
-                    return "0.0 KB"
-                }
-                var size_name = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-                var pre = Math.log(value)/Math.log(1024)
-                var i = Math.floor(pre)
-                if (i == 0){
-                    i = 1;
-                }
-                var p = Math.pow(1024, i)
-                var s = (value/p).toFixed(1)
-                return s+" "+size_name[i]
-            }
-        },
-      }
-});
-
-getSelection = function(collection){
-    var ret = [];
-    var i;
-    for (i = 0; i < collection.length; i++) {
-        if (collection[i].isSelected){
-            ret.push(collection[i])
-        }
-    }
-    return ret;
-}
-
 getModalMovie = function($uibModal, video){
     var modalInstance = $uibModal.open({
         animation: true,
@@ -124,7 +71,11 @@ app.controller('ModalMovieCtrl', function ($scope, $uibModalInstance, $http, vid
     var i;
     pc.videos = []
     for (i = 0; i < videos.length; i++) {
-        var result = videos[i].path.match(/(.*)[sS](\d*)[eExX](\d*).*/);
+        var path = videos[i].path;
+        if  (path == undefined){
+            path = videos[i].Path
+        }
+        var result = path.match(/(.*)[sS](\d*)[eExX](\d*).*/);
         if (result){
             videos[i]["Season"] = parseInt(result[2]);
             videos[i]["Episode"] = parseInt(result[3]);
