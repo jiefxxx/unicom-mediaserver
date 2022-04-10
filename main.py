@@ -1,4 +1,5 @@
 import asyncio
+import json
 import os
 import toml
 
@@ -10,10 +11,40 @@ from medialibrary import Library, Tmdb
 
 medialibrary.tmdb_init(config["tmdb"]["key"], config["tmdb"]["language"])
 
+
 async def shell(cmd):
     proc = await asyncio.create_subprocess_shell(cmd)
     await proc.communicate()
     return proc.returncode
+
+
+class TvEssentialHandler:
+    @staticmethod
+    async def GET(server, user: str):
+        last = server.library.tvs(user).order_by("MAX(Episodes.release_date)").json_results(30)
+        recent = server.library.tvs(user).order_by("MAX(Videos.adding)").json_results(30)
+        return f'{{ "last":{last}, "recent":{recent}}}'.encode()
+
+
+class MovieEssentialHandler:
+    @staticmethod
+    async def GET(server, user:str):
+        last = server.library.movies(user).order_by("MAX(Movies.release_date)").json_results(30)
+        recent = server.library.movies(user).order_by("MAX(Videos.adding)").json_results(30)
+        return f'{{ "last":{last}, "recent":{recent}}}'.encode()
+
+
+class TvGenreHandler:
+    @staticmethod
+    async def GET(server):
+        return server.library.genre_tv_json().encode()
+
+
+class MovieGenreHandler:
+    @staticmethod
+    async def GET(server):
+        return server.library.genre_movie_json().encode()
+
 
 class IndexHandler:
     @staticmethod
@@ -148,6 +179,7 @@ class CollectionHandler:
         collection.save()
         return b"{}"
 
+
 class VideoHandler:
     @staticmethod
     async def GET(server, url, user: str, media_id: int=None, media_type: str=None):
@@ -246,7 +278,11 @@ if __name__ == '__main__':
 
     s.add_api(r"^/api/video(?:/(\d+))?(?:/(.+))?$", VideoHandler)
     s.add_api(r"^/api/movie(?:/(\d+))?$", MovieHandler)
+    s.add_api(r"^/api/movie/essential", MovieEssentialHandler)
+    s.add_api(r"^/api/movie/genre", MovieGenreHandler)
     s.add_api(r"^/api/tv(?:/(\d+))?(?:/season/(\d+))?(?:/episode/(\d+))?$", TvHandler)
+    s.add_api(r"^/api/tv/essential", TvEssentialHandler)
+    s.add_api(r"^/api/tv/genre", TvGenreHandler)
     s.add_api(r"^/api/person(?:/(\d+))?$", PersonHandler)
     s.add_api(r"^/api/collection(?:/(\d+))?$", CollectionHandler)
     s.add_api(r"^/api/moviesearch$", MovieSearchHandler)
