@@ -21,16 +21,16 @@ async def shell(cmd):
 class TvEssentialHandler:
     @staticmethod
     async def GET(server, user: str):
-        last = server.library.tvs(user).order_by("MAX(Episodes.release_date)").json_results(30)
-        recent = server.library.tvs(user).order_by("MAX(Videos.adding)").json_results(30)
+        recent = server.library.tvs(user).order_by("MAX(Episodes.release_date) DESC").json_results(30)
+        last = server.library.tvs(user).order_by("MAX(Videos.adding) DESC").json_results(30)
         return f'{{ "last":{last}, "recent":{recent}}}'.encode()
 
 
 class MovieEssentialHandler:
     @staticmethod
     async def GET(server, user:str):
-        last = server.library.movies(user).order_by("MAX(Movies.release_date)").json_results(30)
-        recent = server.library.movies(user).order_by("MAX(Videos.adding)").json_results(30)
+        recent = server.library.movies(user).order_by("Movies.release_date DESC").json_results(30)
+        last = server.library.movies(user).order_by("MAX(Videos.adding) DESC").json_results(30)
         return f'{{ "last":{last}, "recent":{recent}}}'.encode()
 
 
