@@ -28,7 +28,7 @@ class TvEssentialHandler:
 
 class MovieEssentialHandler:
     @staticmethod
-    async def GET(server, user:str):
+    async def GET(server, user: str):
         recent = server.library.movies(user).order_by("Movies.release_date DESC").json_results(30)
         last = server.library.movies(user).order_by("MAX(Videos.adding) DESC").json_results(30)
         return f'{{ "last":{last}, "recent":{recent}}}'.encode()

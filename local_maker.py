@@ -50,12 +50,15 @@ if len(sys.argv) < 4:
     sys.exit(-2)
 
 if sys.argv[2] == "movie":
+    print("begin movie")
     if len(sys.argv) != 4:
         print("args count failed")
         sys.exit(-2)
     video = lib.new_video(user, sys.argv[1], 0)
+    print("video created")
     try:
         video.set_movie(int(sys.argv[3]))
+        print("video set_movie")
         movie = lib.movie(user, int(sys.argv[3]))
         name = f"{get_normalized_title(movie)}.{movie.release_date[:4]}{os.path.splitext(video.path)[1]}"
         path = get_best_path(config["path"]["movie"], video.size)
@@ -67,6 +70,7 @@ if sys.argv[2] == "movie":
             v.full().delete()
 
         shutil.copy(video.path, os.path.join(path, name))
+        print("video copy", name)
         video.set_path(os.path.join(path, name))
         sys.exit(0)
     except Exception as e:
