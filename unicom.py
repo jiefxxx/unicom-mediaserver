@@ -204,6 +204,7 @@ class Server:
                 time.sleep(10)
 
     async def serve_request(self, message_id, data):
+        print(data)
         data = json.loads(data)
         handler = self.get_api_handler(data["id"])
         data["parameters"]["server"] = self
@@ -237,7 +238,8 @@ class Server:
         await write_message(self.writer, 1, pending.id, message.encode())
         await pending.wait()
         self.remove_pending(pending)
-        print(pending.error)
+        if pending.error:
+            raise pending.error
         return pending.get()
 
     async def request(self, target, method, path, parameters, input_value):
