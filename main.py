@@ -43,6 +43,7 @@ def get_best_path(paths, size):
             return path
     return None
 
+
 class Executor:
     """In most cases, you can just use the 'execute' instance as a
     function, i.e. y = await execute(f, a, b, k=c) => run f(a, b, k=c) in
@@ -56,7 +57,7 @@ class Executor:
 
     def __call__(self, f, *args, **kw):
         from functools import partial
-        return self._loop.run_in_executor(self._ex, partial(f, *args, **kw))
+        return asyncio.get_running_loop().run_in_executor(self._ex, partial(f, *args, **kw))
 
 
 execute = Executor()
