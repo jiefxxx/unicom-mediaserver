@@ -64,6 +64,9 @@ execute = Executor()
 
 
 def movie_maker(user, lib, video_path, movie_id):
+
+    for v in lib.videos(user).path(video_path).results():
+        v.full().delete()
     print(f"new movie {video_path}")
     video = lib.new_video(user, video_path, 0)
     video.set_movie(movie_id)
@@ -80,11 +83,13 @@ def movie_maker(user, lib, video_path, movie_id):
     video.set_path(os.path.join(path, name))
 
 
-def tv_maker(user, lib, video_path, tv_id, season, epiosde):
+def tv_maker(user, lib, video_path, tv_id, season, episode):
+    for v in lib.videos(user).path(video_path).results():
+        v.full().delete()
     video = lib.new_video(user, video_path, 1)
-    video.set_tv(tv_id, season, epiosde)
+    video.set_tv(tv_id, season, episode)
     tv = lib.tv(user, tv_id)
-    name = f"{get_normalized_title(tv)}/{get_normalized_title(tv)}.s{int(sys.argv[4]):02d}e{int(sys.argv[5]):02d}{os.path.splitext(video.path)[1]}"
+    name = f"{get_normalized_title(tv)}/{get_normalized_title(tv)}.s{int(season):02d}e{int(episode):02d}{os.path.splitext(video.path)[1]}"
     path = get_best_path(config["path"]["tv"], video.size)
     if path is None:
         raise Exception("no space left")
