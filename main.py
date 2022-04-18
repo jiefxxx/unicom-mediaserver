@@ -1,7 +1,10 @@
 import asyncio
 import json
 import os
+import shutil
+
 import toml
+from alphabet_detector import AlphabetDetector
 
 config = toml.load("./config.toml")
 
@@ -11,11 +14,87 @@ from medialibrary import Library, Tmdb
 
 medialibrary.tmdb_init(config["tmdb"]["key"], config["tmdb"]["language"])
 
+loop = asyncio.get_event_loop()
 
-async def shell(cmd):
-    proc = await asyncio.create_subprocess_shell(cmd)
-    await proc.communicate()
-    return proc.returncode
+def get_normalized_title(media):
+    if AlphabetDetector().is_latin(media.original_title):
+        return media.original_title.replace(" ", ".").lower()
+    return media.title.replace(" ", ".").lower()
+
+
+def check_for_space(p, size):
+    stats = shutil.disk_usage(p)
+    free_bytes = stats.free
+    # print(path, convert_size(free_bytes), convert_size(size))
+    if size >= free_bytes:
+        return False
+    return True
+
+
+def ensure_dir(p):
+    if not os.path.exists(p):
+        print("Create ", p)
+        os.mkdir(p)
+
+
+def get_best_path(paths, size):
+    for path in paths:
+        if check_for_space(path, size):
+            return path
+    return None
+
+class Executor:
+    """In most cases, you can just use the 'execute' instance as a
+    function, i.e. y = await execute(f, a, b, k=c) => run f(a, b, k=c) in
+    the executor, assign result to y. The defaults can be changed, though,
+    with your own instantiation of Executor, i.e. execute =
+    Executor(nthreads=4)"""
+    def __init__(self, loop=loop, nthreads=1):
+        from concurrent.futures import ThreadPoolExecutor
+        self._ex = ThreadPoolExecutor(nthreads)
+        self._loop = loop
+
+    def __call__(self, f, *args, **kw):
+        from functools import partial
+        return self._loop.run_in_executor(self._ex, partial(f, *args, **kw))
+
+
+execute = Executor()
+
+
+def movie_maker(user, lib, video_path, movie_id):
+    print(f"new movie {video_path}")
+    video = lib.new_video(user, video_path, 0)
+    video.set_movie(movie_id)
+    movie = lib.movie(user, movie_id)
+    name = f"{get_normalized_title(movie)}.{movie.release_date[:4]}{os.path.splitext(video.path)[1]}"
+    path = get_best_path(config["path"]["movie"], video.size)
+    if path is None:
+        raise Exception("no space left")
+
+    for v in lib.videos(user).path(os.path.join(path, name)).results():
+        v.full().delete()
+    print(f"copy movie {name}")
+    shutil.copy(video.path, os.path.join(path, name))
+    video.set_path(os.path.join(path, name))
+
+
+def tv_maker(user, lib, video_path, tv_id, season, epiosde):
+    video = lib.new_video(user, video_path, 1)
+    video.set_tv(tv_id, season, epiosde)
+    tv = lib.tv(user, tv_id)
+    name = f"{get_normalized_title(tv)}/{get_normalized_title(tv)}.s{int(sys.argv[4]):02d}e{int(sys.argv[5]):02d}{os.path.splitext(video.path)[1]}"
+    path = get_best_path(config["path"]["tv"], video.size)
+    if path is None:
+        raise Exception("no space left")
+
+    for v in lib.videos(user).path(os.path.join(path, name)).results():
+        v.full().delete()
+
+    ensure_dir(os.path.join(path, f"{get_normalized_title(tv)}/"))
+    shutil.copy(video.path, os.path.join(path, name))
+    video.set_path(os.path.join(path, name))
+
 
 
 class TvEssentialHandler:
@@ -197,15 +276,15 @@ class VideoHandler:
             return search.json_results().encode()
 
     @staticmethod
-    async def POST(input_data: "Json"):
+    async def POST(server, input_data: "Json"):
+        user = "maker"
         if "movieID" in input_data:
-            ret = await shell(f"python3 local_maker.py '{input_data['path']}' movie {input_data['movieID']}")
+            await execute(movie_maker, user, server.library, input_data['path'], input_data['movieID'])
         elif "tvID" in input_data:
-            ret = await shell(f"python3 local_maker.py '{input_data['path']}' tv {input_data['tvID']} {input_data['season']} {input_data['episode']}")
+            await execute(tv_maker, user, server.library, input_data['path'], input_data['tvID'],
+                          input_data['season'], input_data['episode'])
         else:
             raise Exception(f"media info invalid {input_data}")
-        if ret < 0:
-            raise Exception(f"local_maker error code :{ret}")
         return b"{'created':'ok'}"
 
     @staticmethod
