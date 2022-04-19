@@ -36,6 +36,19 @@ app.controller('fileTable', ['$scope', '$http', '$uibModal', '$window',function 
             return "movie/"+value["Movie"]["id"]
         }
     };
+
+    $scope.selectAll = function(){
+        for (i = 0; i < $scope.displayedCollection.length; i++){
+             $scope.displayedCollection[i].isSelected = true;
+        }
+    }
+
+     $scope.deSelectAll = function(){
+        for (i = 0; i < $scope.rowCollection.length; i++){
+             $scope.rowCollection[i].isSelected = false;
+        }
+    }
+
     $scope.deleteVideos = function(){
         selection = getSelection($scope.rowCollection);
         if (confirm("Voulez vous effacer")) {

@@ -35,6 +35,8 @@
 				  	</div>
 				  	<input st-search="" ng-model="searchText" class="form-control" id="inputGroup-sizing-default" placeholder="global search videos ..." type="text">
 				  	<div class="input-group-append">
+						<button class="btn btn-outline-secondary" type="button" ng-click="selectAll()">Select All</button>
+						<button class="btn btn-outline-secondary" type="button" ng-click="deSelectAll()">Deselect All</button>
 						<button class="btn btn-outline-secondary" type="button" ng-click="editVideos()">Edit</button>
 				  		<button class="btn btn-outline-danger" type="button" ng-click="deleteVideos()">Delete</button>
 					</div>

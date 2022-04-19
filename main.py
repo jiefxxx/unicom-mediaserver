@@ -319,11 +319,10 @@ class VideoHandler:
 
     @staticmethod
     async def DELETE(server, url, user: str):
-        if user != "root":
+        if user != "root" and user != "jief":
             raise Exception("Not allowed")
         if len(url[1]) > 0:
-            video_id = int(url[1])
-            video = server.library.get_video(video_id)
+            video = server.library.video(user, int(url[1]))
             if video is None:
                 raise Exception("Error video not found")
             video.delete()
