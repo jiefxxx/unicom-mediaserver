@@ -1,15 +1,15 @@
-{% import "mediaserver/nav.html" as macros %}
-{% extends "base.html" %}
+{% import "MediaServer/nav.html" as macros %}
+{% extends "Home/base.html" %}
 {% block title %}MediaServer - Tv{% endblock title %}
 {% block script %}
-<script type="text/javascript" src="/mediaserver/js/base.js"></script>
-<script type="text/javascript" src="/mediaserver/js/tvs.js"></script>
+<script type="text/javascript" src="/MediaServer/js/base.js"></script>
+<script type="text/javascript" src="/MediaServer/js/tvs.js"></script>
 {% endblock script %}
 {% block content %}
 {{ macros::nav(current="tv") }}
 <div class="container-fluid">
     <div class="bg row" ng-app="unicom_server" ng-controller="tvController" style="
-                background-image: url('/mediaserver/rsc/original{{backdrop_path}}');
+                background-image: url('/MediaServer/rsc/original{{tv.backdrop_path}}');
                 height: 100%;
                 background-position: center;
                 background-repeat: no-repeat;
@@ -20,19 +20,19 @@
             padding: 10px;">
             <div class="row">
                 <div class="col-2">
-                    <img class="img-fluid rounded" src="/mediaserver/rsc/original{{poster_path}}" alt="Card image cap">
+                    <img class="img-fluid rounded" src="/MediaServer/rsc/original{{tv.poster_path}}" alt="Card image cap">
                 </div>
                 <div class="col-10 text-white" >
                     <div class="row">
                         <div class="col-10">
-                            <h1 class="d-inline font-weight-bold ">{{title}} </h1> <h2 class="d-inline font-italic"> - ({{original_title}})</h2>
+                            <h1 class="d-inline font-weight-bold ">{{tv.title}} </h1> <h2 class="d-inline font-italic"> - ({{tv.original_title}})</h2>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <h4 class="col-auto font-weight-bold">
-                            {{release_date}} *
-                            {% for genre in genres %}
+                            {{tv.release_date}} *
+                            {% for genre in tv.genres %}
                                 <a href="#">{{genre}},</a>
                             {% endfor %}
                         </h4>
@@ -44,17 +44,17 @@
 
                     <br>
                     <div class="row">
-                        <h1 class="col-auto d-inline font-weight-bold align-top">{{vote_average}}</h1>
+                        <h1 class="col-auto d-inline font-weight-bold align-top">{{tv.vote_average}}</h1>
                         <a class="col-auto align-bottom" href="#"><img src="/rsc/heart-empty.png" alt="" width="32" height="32"></a>
-                        <a class="col-auto align-bottom" href="#" ng-click="add_to_collection({{id}})" ><img src="/rsc/plus.png" alt="" width="32" height="32"></a>
+                        <a class="col-auto align-bottom" href="#" ng-click="add_to_collection({{tv.id}})" ><img src="/rsc/plus.png" alt="" width="32" height="32"></a>
                     </div>
                     <br>
-                    <div class="row"> <p class="font-italic col-12">{{overview}}</p> </div>
+                    <div class="row"> <p class="font-italic col-12">{{tv.overview}}</p> </div>
                     <br>
                     <div class="row">
                         <div class="col-auto">
                             <h4>Trailer</h4>
-                            {% for t in trailer %}
+                            {% for t in tv.trailer %}
                             <a href="https://www.youtube.com/watch?v={{t.youtube_id}}">{{t.name}}</a><br>
                             {% endfor %}
                         </div>
@@ -63,9 +63,9 @@
                     <div class="row">
                         <div class="col-4">
                             <h4>Créateur</h4>
-                            {% for c in crew %}
+                            {% for c in tv.crew %}
                                 {%if c.job == "Creator"%}
-                                    <a href="/mediaserver/person/{{c.id}}">{{c.name}}</a>
+                                    <a href="/MediaServer/person/{{c.id}}">{{c.name}}</a>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -79,24 +79,24 @@
             display: block;
             overflow-x: auto;
             white-space: nowrap;">
-        {% for actor in cast | sort(attribute="ord")%}
+        {% for actor in tv.cast | sort(attribute="ord")%}
         <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" style="display: inline-block;">
 			<div class="card" >
-                <img class="card-img-top rounded" src="/mediaserver/rsc/original{{actor.profile_path}}" onerror="this.src='/rsc/profile_empty.png'" alt="Card image cap">
+                <img class="card-img-top rounded" src="/MediaServer/rsc/original{{actor.profile_path}}" onerror="this.src='/rsc/profile_empty.png'" alt="Card image cap">
                 <div class="card-body">
                     <h4 class="card-title font-italic">{{actor.character}}</h4>
-                    <p class="card-text"><a href="/mediaserver/person/{{actor.id}}">{{actor.name}}</a></p>
+                    <p class="card-text"><a href="/MediaServer/person/{{actor.id}}">{{actor.name}}</a></p>
               </div>
             </div>
 		</div>
         {% endfor %}
     </div>
     <div class="row overflow-y-auto">
-        {% for season in seasons | sort(attribute="season_number")%}
+        {% for season in tv.seasons | sort(attribute="season_number")%}
 		<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6" >
 			<div class="card" >
-				<a href="/mediaserver/tv/{{id}}/season/{{season.season_number}}">
-                    <img class="card-img-top" src="/mediaserver/rsc/original{{season.poster_path}}" onerror="this.src='/rsc/poster_empty.jpg'" alt="Card image cap">
+				<a href="/MediaServer/tv/{{tv.id}}/season/{{season.season_number}}">
+                    <img class="card-img-top" src="/MediaServer/rsc/original{{season.poster_path}}" onerror="this.src='/rsc/poster_empty.jpg'" alt="Card image cap">
 
 				</a>
                 <div class="card-body">

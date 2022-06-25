@@ -5,7 +5,7 @@ app.controller('tvController', ['$scope', '$http', '$uibModal', '$window',functi
             var dataToPost = {"tv_id": parseInt(tv_id)};
             $http({
                 method: 'PUT',
-                url: '/mediaserver/api/collection/'+ collection_id,
+                url: '/MediaServer/api/collection/'+ collection_id,
                 data: dataToPost }).then(function (response) {
                     console.log("yeah", response.data)
                 });
@@ -38,7 +38,7 @@ app.controller('tvTable', ['$scope', '$http', '$uibModal', '$window',function ($
         }
     }
 
-    $http.get("/mediaserver/api/tv")
+    $http.get("/MediaServer/api/tv")
     .then(function (response) {
         videos = response.data;
         $scope.collection = videos;

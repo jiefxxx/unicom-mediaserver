@@ -13,7 +13,7 @@ app.controller('movieController', ['$scope', '$http', '$uibModal', '$window',fun
             var dataToPost = {"movie_id": parseInt(movie_id)};
             $http({
                 method: 'PUT',
-                url: '/mediaserver/api/collection/'+ collection_id,
+                url: '/MediaServer/api/collection/'+ collection_id,
                 data: dataToPost }).then(function (response) {
                     console.log("yeah", response.data)
                 });
@@ -27,7 +27,7 @@ app.controller('movieController', ['$scope', '$http', '$uibModal', '$window',fun
             for(var i=0;i<selection.length;i++){
                 $http({
                 method: 'PUT',
-                url: '/mediaserver/api/video/'+ selection[i],
+                url: '/MediaServer/api/video/'+ selection[i],
                 data: dataToPost }).then(function (response) {
                     console.log("yeah", response.data)
                 });
@@ -42,7 +42,7 @@ app.controller('movieController', ['$scope', '$http', '$uibModal', '$window',fun
         if (confirm("Voulez vous effacer")) {
              $http({
                 method: 'delete',
-                url: '/mediaserver/api/video/'+ id }).then(function (response) {
+                url: '/MediaServer/api/video/'+ id }).then(function (response) {
                     console.log("yeah", response.data)
                 });
         }
@@ -52,7 +52,7 @@ app.controller('movieController', ['$scope', '$http', '$uibModal', '$window',fun
         console.log("scope " + $scope.watched)
         $http({
             method: 'PUT',
-            url: '/mediaserver/api/movie/'+ id ,
+            url: '/MediaServer/api/movie/'+ id ,
             data: {"watched": $scope.watched}}).then(function (response) {
                 console.log("yeah", response.data)
             });
@@ -85,7 +85,7 @@ app.controller('movieTable', ['$scope', '$http', '$uibModal', '$window',function
         }
     }
 
-    $http.get("/mediaserver/api/movie")
+    $http.get("/MediaServer/api/movie")
     .then(function (response) {
         videos = response.data;
         $scope.collection = videos;

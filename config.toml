@@ -1,9 +1,133 @@
-db = ".mediaserver.db"
-stream = "/tmp/test2.stream"
-rsc = "/home/jief/rsc"
-[tmdb]
-    key = "bd00b4d04b286b876c3455692a531120"
-    language = "fr"
-[path]
-    movie = ["/home/jief/Vidéos/movies"]
-    tv = ["/home/jief/Vidéos/tvs"]
+name = "MediaServer"
+kind = {Python={}}
+after = "Home"
+templates_path = "templates/"
+tags= {web_app_root="/MediaServer"}
+
+[[endpoints]]
+regex="/MediaServer"
+kind = {View = {template="MediaServer/index.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}}}}
+
+[[endpoints]]
+regex="/MediaServer/js(/.*)"
+kind = {Static={path="js/"}}
+
+[[endpoints]]
+regex="/MediaServer/rsc(/.*)"
+kind = {Static={path="/home/jief/rsc"}}
+
+[[endpoints]]
+regex="/MediaServer/video"
+kind = {View = {template="MediaServer/videos.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}}}}
+
+[[endpoints]]
+regex="/MediaServer/video/(\\d+)"
+kind = {View = {template="MediaServer/video.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}, video={node="MediaServer", api="VideoHandler"}}}}
+
+[[endpoints]]
+regex="/MediaServer/movie"
+kind = {View = {template="MediaServer/movies.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}}}}
+
+[[endpoints]]
+regex="/MediaServer/movie/(\\d+)"
+kind = {View = {template="MediaServer/movie.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}, movie={node="MediaServer", api="MovieHandler"}}}}
+
+[[endpoints]]
+regex="/MediaServer/tv"
+kind = {View = {template="MediaServer/tvs.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}}}}
+
+[[endpoints]]
+regex="/MediaServer/tv/(\\d+)"
+kind = {View = {template="MediaServer/tv.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}, tv={node="MediaServer", api="TvHandler"}}}}
+
+[[endpoints]]
+regex="/MediaServer/tv/(\\d+)/season/(\\d+)"
+kind = {View = {template="MediaServer/season.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}, season={node="MediaServer", api="TvHandler"}}}}
+
+[[endpoints]]
+regex="/MediaServer/tv/(\\d+)/season/(\\d+)/episode/(\\d+)"
+kind = {View = {template="MediaServer/episode.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}, episode={node="MediaServer", api="TvHandler"}}}}
+
+[[endpoints]]
+regex="/MediaServer/person"
+kind = {View = {template="MediaServer/persons.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}}}}
+
+[[endpoints]]
+regex="/MediaServer/person/(\\d+)"
+kind = {View = {template="MediaServer/person.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}, person={node="MediaServer", api="PersonHandler"}}}}
+
+[[endpoints]]
+regex="/MediaServer/collection"
+kind = {View = {template="MediaServer/collections.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}}}}
+
+[[endpoints]]
+regex="/MediaServer/collection/(\\d+)"
+kind = {View = {template="MediaServer/collection.html", apis={nodes={node="system", api="nodes", parameters={tag="web_app_root"}}, collection={node="MediaServer", api="CollectionHandler"}}}}
+
+[[endpoints]]
+regex="/MediaServer/modal/create_collection"
+kind = {View = {template="MediaServer/create_collection.html", apis={}}}
+
+[[endpoints]]
+regex="/MediaServer/modal/get_collection"
+kind = {View = {template="MediaServer/get_collection.html", apis={}}}
+
+[[endpoints]]
+regex="/MediaServer/modal/tvsearch"
+kind = {View = {template="MediaServer/tvsearch.html", apis={}}}
+
+[[endpoints]]
+regex="/MediaServer/modal/moviesearch"
+kind = {View = {template="MediaServer/moviesearch.html", apis={}}}
+
+[[endpoints]]
+regex="/MediaServer/custom_pagination"
+kind = {View = {template="MediaServer/custom_pagination.html", apis={}}}
+
+[[endpoints]]
+regex="/MediaServer/api/video(?:/(\\d+))?(?:/(.+))?"
+kind = {Rest = {api="VideoHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/movie(?:/(\\d+))?"
+kind = {Rest = {api="MovieHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/movie/essential"
+kind = {Rest = {api="MovieEssentialHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/movie/genre"
+kind = {Rest = {api="MovieGenreHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/tv(?:/(\\d+))?(?:/season/(\\d+))?(?:/episode/(\\d+))?"
+kind = {Rest = {api="TvHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/tv/essential"
+kind = {Rest = {api="TvEssentialHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/tv/genre"
+kind = {Rest = {api="TvGenreHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/person(?:/(\\d+))?"
+kind = {Rest = {api="PersonHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/collection(?:/(\\d+))?"
+kind = {Rest = {api="CollectionHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/moviesearch"
+kind = {Rest = {api="MovieSearchHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/api/tvsearch"
+kind = {Rest = {api="TvSearchHandler"}}
+
+[[endpoints]]
+regex="/MediaServer/stream/(\\d+)"
+kind = {Dynamic = {api="StreamHandler"}}

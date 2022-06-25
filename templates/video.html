@@ -1,24 +1,24 @@
-{% import "mediaserver/nav.html" as macros %}
-{% extends "base.html" %}
+{% import "MediaServer/nav.html" as macros %}
+{% extends "Home/base.html" %}
 {% block title %}MediaServer - video{% endblock title %}
 {% block content %}
 
 {{ macros::nav(current="video") }}
 
 <div class="container-fluid">
-    <h2>Video - {{id}}</h2>
+    <h2>Video - {{video.id}}</h2>
     <div>
-        path: {{path}} <br>
-        duration: {{duration | duration }} min <br>
-        size: {{ size | bytes }}<br>
-        bit rate: {{ bit_rate | bytes }}/s<br>
-        adding: {{adding}} <br>
-        codec: {{codec}} <br>
-        resolution {{ width }} - {{ height }} <br>
-        {% if info.Movie %}
-            movie : {{info.Movie.title}} {{info.Movie.release_date}}
-        {% elif info.Tv %}
-            tv : {{info.Tv.title}} - S{{info.Tv.season_number|multidigit}}E{{info.Tv.episode_number|multidigit}}
+        path: {{video.path}} <br>
+        duration: {{video.duration | duration }} min <br>
+        size: {{ video.size | bytes }}<br>
+        bit rate: {{ video.bit_rate | bytes }}/s<br>
+        adding: {{video.adding}} <br>
+        codec: {{video.codec}} <br>
+        resolution {{ video.width }} - {{ video.height }} <br>
+        {% if video.info.Movie %}
+            movie : {{video.info.Movie.title}} {{video.info.Movie.release_date}}
+        {% elif video.info.Tv %}
+            tv : {{video.info.Tv.title}} - S{{video.info.Tv.season_number|multidigit}}E{{video.info.Tv.episode_number|multidigit}}
         {% else %}
             media unknown
         {% endif %}

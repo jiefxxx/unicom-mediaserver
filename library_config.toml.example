@@ -1,0 +1,9 @@
+db = ".mediaserver.db"
+rsc = "/home/jief/rsc"
+
+[tmdb]
+    key = "bd00b4d04b286b876c3455692a531120"
+    language = "fr"
+[path]
+    movie = ["/home/jief/Vidéos/movies"]
+    tv = ["/home/jief/Vidéos/tvs"]

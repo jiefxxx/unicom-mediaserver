@@ -21,7 +21,7 @@ app.controller('personTable', ['$scope', '$http', '$uibModal', '$window',functio
         }
     }
 
-    $http.get("/mediaserver/api/person")
+    $http.get("/MediaServer/api/person")
     .then(function (response) {
         videos = response.data;
         $scope.collection = videos;

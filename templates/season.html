@@ -1,15 +1,15 @@
-{% import "mediaserver/nav.html" as macros %}
-{% extends "base.html" %}
+{% import "MediaServer/nav.html" as macros %}
+{% extends "Home/base.html" %}
 {% block title %}MediaServer - Tv{% endblock title %}
 {% block script %}
-<script type="text/javascript" src="/mediaserver/js/base.js"></script>
-<script type="text/javascript" src="/mediaserver/js/tv.js"></script>
+<script type="text/javascript" src="/MediaServer/js/base.js"></script>
+<script type="text/javascript" src="/MediaServer/js/tv.js"></script>
 {% endblock script %}
 {% block content %}
 {{ macros::nav(current="tv") }}
 <div class="container-fluid">
     <div class="bg row" ng-app="unicom_server" ng-controller="tvController" style="
-                background-image: url('/mediaserver/rsc/original{{tv.backdrop_path}}');
+                background-image: url('/MediaServer/rsc/original{{season.tv.backdrop_path}}');
                 height: 100%;
                 background-position: center;
                 background-repeat: no-repeat;
@@ -20,31 +20,31 @@
             padding: 10px;">
             <div class="row">
                 <div class="col-2">
-                    <img class="img-fluid rounded" src="/mediaserver/rsc/original{{poster_path}}" onerror="this.src='/rsc/poster_empty.jpg'" alt="Card image cap">
+                    <img class="img-fluid rounded" src="/MediaServer/rsc/original{{season.poster_path}}" onerror="this.src='/rsc/poster_empty.jpg'" alt="Card image cap">
                 </div>
                 <div class="col-10 text-white" >
                     <div class="row">
                         <div class="col-10">
-                            <h1 class="d-inline font-weight-bold ">{{tv.title}} S{{season_number | multidigit}} : {{title}} </h1>
+                            <h1 class="d-inline font-weight-bold ">{{season.tv.title}} S{{season.season_number | multidigit}} : {{season.title}} </h1>
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <h4 class="col-auto font-weight-bold">
-                            {{release_date}}
+                            {{season.release_date}}
                         </h4>
                     </div>
                     <br>
-                    {% if overview|length == 0 %}
-                    <div class="row"> <p class="font-italic col-12">{{tv.overview}}</p> </div>
+                    {% if season.overview|length == 0 %}
+                    <div class="row"> <p class="font-italic col-12">{{season.tv.overview}}</p> </div>
                     {% else %}
-                    <div class="row"> <p class="font-italic col-12">{{overview}}</p> </div>
+                    <div class="row"> <p class="font-italic col-12">{{season.overview}}</p> </div>
                     {% endif %}
 
                     <br>
                     <div class="row">
                         <h5 class="col-auto">
-                            {{episodes | length}} / {{episode_count}} episodes
+                            {{season.episodes | length}} / {{season.episode_count}} episodes
                         </h5>
                     </div>
                     <br>
@@ -56,10 +56,10 @@
 
         <table class="table table-striped" >
             <tbody>
-            {% for episode in episodes | sort(attribute="episode_number")%}
+            {% for episode in season.episodes | sort(attribute="episode_number")%}
                 <tr>
                     <td>{{episode.episode_number}}</td>
-                    <td><a href="/mediaserver/tv/{{tv_id}}/season/{{season_number}}/episode/{{episode.episode_number}}">{{episode.title}}</a></td>
+                    <td><a href="/MediaServer/tv/{{season.tv_id}}/season/{{season.season_number}}/episode/{{episode.episode_number}}">{{episode.title}}</a></td>
                     <td>{{episode.overview}}</td>
                     <td>{{episode.vote_average}}</td>
                     <td>{{episode.release_date}}</td>

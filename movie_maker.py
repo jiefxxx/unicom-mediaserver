@@ -2,7 +2,7 @@ import medialibrary
 from medialibrary import Library, Tmdb
 import toml
 
-config = toml.load("./config.toml")
+config = toml.load("./library_config.toml")
 
 medialibrary.tmdb_init(config["tmdb"]["key"], config["tmdb"]["language"])
 

@@ -3,7 +3,7 @@ getModalMovie = function($uibModal, video){
         animation: true,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
-        templateUrl: '/mediaserver/modal/moviesearch',
+        templateUrl: '/MediaServer/modal/moviesearch',
         controller: 'ModalMovieCtrl',
         controllerAs: 'pc',
         windowClass: 'show',
@@ -23,7 +23,7 @@ getModalTvShow = function($uibModal, videos){
         animation: true,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
-        templateUrl: '/mediaserver/modal/tvsearch',
+        templateUrl: '/MediaServer/modal/tvsearch',
         controller: 'ModalTvCtrl',
         controllerAs: 'pc',
         windowClass: 'show',
@@ -47,7 +47,7 @@ app.controller('ModalMovieCtrl', function ($scope, $uibModalInstance, $http, vid
 
     $scope.searchMovie = function(){
         if ($scope.textSearch.length>0){
-            $http.get("/mediaserver/api/moviesearch?query="+$scope.textSearch)
+            $http.get("/MediaServer/api/moviesearch?query="+$scope.textSearch)
             .then(function (response) {
                 pc.movies = response.data.results;
                 console.log("yeah",pc.movies)
@@ -98,7 +98,7 @@ app.controller('ModalMovieCtrl', function ($scope, $uibModalInstance, $http, vid
     $scope.searchTvShow = function(){
         if ($scope.textSearch.length>0){
             console.log($scope.textSearch)
-            $http.get("/mediaserver/api/tvsearch?query="+$scope.textSearch)
+            $http.get("/MediaServer/api/tvsearch?query="+$scope.textSearch)
             .then(function (response) {
                 pc.tvShows = response.data.results;
                 console.log(pc.tvShows)
@@ -123,7 +123,7 @@ app.controller('ModalMovieCtrl', function ($scope, $uibModalInstance, $http, vid
         animation: true,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
-        templateUrl: '/mediaserver/modal/get_collection',
+        templateUrl: '/MediaServer/modal/get_collection',
         controller: 'ModalGetCollectionCtrl',
         controllerAs: 'pc',
         windowClass: 'show',
@@ -142,7 +142,7 @@ app.controller('ModalGetCollectionCtrl', function ($scope, $uibModalInstance, $h
 
     $scope.local = JSON.parse(localStorage.getItem('collections'));
 
-    $http.get("/mediaserver/api/collection?restrict=1")
+    $http.get("/MediaServer/api/collection?restrict=1")
     .then(function (response) {
         videos = response.data;
         $scope.collections = videos;

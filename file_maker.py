@@ -5,7 +5,7 @@ from medialibrary import Library
 
 import toml
 
-config = toml.load("./config.toml")
+config = toml.load("./library_config.toml")
 
 user = "fileMaker"
 

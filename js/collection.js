@@ -3,7 +3,7 @@ getModalCreateCollection = function($uibModal){
         animation: true,
         ariaLabelledBy: 'modal-title',
         ariaDescribedBy: 'modal-body',
-        templateUrl: '/mediaserver/modal/create_collection',
+        templateUrl: '/MediaServer/modal/create_collection',
         controller: 'ModalCreateCollectionCtrl',
         controllerAs: 'pc',
         windowClass: 'show',
@@ -24,7 +24,7 @@ app.controller('ModalCreateCollectionCtrl', function ($scope, $uibModalInstance,
                           "description": $scope.description};
         $http({
             method: 'POST',
-            url: '/mediaserver/api/collection',
+            url: '/MediaServer/api/collection',
             data: dataToPost }).then(function (response) {
                 $uibModalInstance.close("yeah");
             }).then(function (error){
@@ -63,7 +63,7 @@ app.controller('collectionTable', ['$scope', '$http', '$uibModal', '$window',fun
         }
     }
 
-    $http.get("/mediaserver/api/collection")
+    $http.get("/MediaServer/api/collection")
     .then(function (response) {
         videos = response.data;
         $scope.collection = videos;

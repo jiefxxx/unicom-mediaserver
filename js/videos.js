@@ -4,7 +4,7 @@ app.controller('fileTable', ['$scope', '$http', '$uibModal', '$window',function 
     $scope.itemsByPage=100;
     $scope.$watch('searchText', function() { $window.scrollTo(0, 0);}, true);
 
-    $http.get("/mediaserver/api/video")
+    $http.get("/MediaServer/api/video")
     .then(function (response) {
         videos = response.data;
         $scope.rowCollection = videos;
@@ -56,7 +56,7 @@ app.controller('fileTable', ['$scope', '$http', '$uibModal', '$window',function 
                  var id = selection[i].id;
                  $http({
                     method: 'delete',
-                    url: '/mediaserver/api/video/'+ id }).then(function (response) {
+                    url: '/MediaServer/api/video/'+ id }).then(function (response) {
                         console.log("yeah", response.data)
                     });
              }
@@ -85,7 +85,7 @@ app.controller('fileTable', ['$scope', '$http', '$uibModal', '$window',function 
                     var dataToPost = {"movie_id": parseInt(movie_id)};
                     $http({
                         method: 'PUT',
-                        url: '/mediaserver/api/video/'+ id+ '/edit_media',
+                        url: '/MediaServer/api/video/'+ id+ '/edit_media',
                         data: dataToPost }).then(function (response) {
                             console.log("yeah", response.data)
                         });
@@ -102,7 +102,7 @@ app.controller('fileTable', ['$scope', '$http', '$uibModal', '$window',function 
                                             "episode_number": parseInt(files[i].Episode)};
                         $http({
                             method: 'PUT',
-                            url: '/mediaserver/api/video/'+selection[i].id+'/edit_media',
+                            url: '/MediaServer/api/video/'+selection[i].id+'/edit_media',
                             data: dataToPost }).then(function (response) {
                                 console.log("yeah",response.data)
                             });
