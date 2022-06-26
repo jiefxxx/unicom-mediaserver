@@ -14,7 +14,7 @@ kind = {Static={path="js/"}}
 
 [[endpoints]]
 regex="/MediaServer/rsc(/.*)"
-kind = {Static={path="/home/jief/rsc"}}
+kind = {Static={path="/media/storage/mediaserver/rsc"}}
 
 [[endpoints]]
 regex="/MediaServer/video"
