@@ -124,7 +124,7 @@ class TvEssentialHandler:
         library = server.get_user_data("medialib")
         recent = library.tvs(user["name"]).order_by("MAX(Episodes.release_date) DESC").json_results(30)
         last = library.tvs(user["name"]).order_by("MAX(Videos.adding) DESC").json_results(30)
-        txt = '{"last":{last}, "recent":{recent}}'
+        txt = '{{"last":{last}, "recent":{recent}}}'
         return  txt.format(last = last, recent = recent).encode()
 
 
@@ -134,7 +134,7 @@ class MovieEssentialHandler:
         library = server.get_user_data("medialib")
         recent = library.movies(user["name"]).order_by("Movies.release_date DESC").json_results(30)
         last = library.movies(user["name"]).order_by("MAX(Videos.adding) DESC").json_results(30)
-        txt = '{"last":{last}, "recent":{recent}}'
+        txt = '{{"last":{last}, "recent":{recent}}}'
         return  txt.format(last = last, recent = recent).encode()
 
 
