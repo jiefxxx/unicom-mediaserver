@@ -141,13 +141,13 @@ class MovieEssentialHandler:
 class TvGenreHandler:
     @staticmethod
     async def GET(server):
-        return server.get_user_data("medialib").library.genre_tv_json().encode()
+        return server.get_user_data("medialib").get_user_data("medialib").library.genre_tv_json().encode()
 
 
 class MovieGenreHandler:
     @staticmethod
     async def GET(server):
-        return server.get_user_data("medialib").library.genre_movie_json().encode()
+        return server.get_user_data("medialib").get_user_data("medialib").library.genre_movie_json().encode()
 
 
 class IndexHandler:
