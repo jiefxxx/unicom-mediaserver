@@ -1,5 +1,7 @@
 #!/bin/bash
 
+su jief
+
 git pull
 
 . venv/bin/activate
