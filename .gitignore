@@ -2,3 +2,4 @@ venv/
 .mediaserver.db
 library_config.toml
 medialibrary/target/
+medialibrary/Cargo.lock
