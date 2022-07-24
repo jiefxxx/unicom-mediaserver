@@ -110,7 +110,7 @@
                     <tr>
                         <td>
                             <a href="/MediaServer/stream/{{video.id}}"><img src="/rsc/play.png" alt="" width="32" height="32"></a>
-                            <a href="/MediaServer/stream/{{video.id}}"><img src="/rsc/download.png" alt="" width="32" height="32"></a>
+                            <a href="/MediaServer/stream/{{video.id}}" download="{{video.path}}"><img src="/rsc/download.png" alt="" width="32" height="32"></a>
                         </td>
                         <td><a href="/MediaServer/video/{{video.id}}"><h5>{{video.path}}</h5></a></td>
                         <td>{{video.size | bytes}}</td>
