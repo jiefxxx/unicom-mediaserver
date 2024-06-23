@@ -38,9 +38,12 @@ pub fn create_person(user: &String, person_id: u64) -> PyResult<()>{
     Ok(())
 }
 
-pub fn create_tv(user: &String, tv_id: u64) -> PyResult<()>{
-    if TvSearch::new(user).id(tv_id)?.exist()?{
-        return Ok(())
+pub fn create_tv(user: &String, tv_id: u64, season_number: u64) -> PyResult<()>{
+    if let Some(result) = TvSearch::new(user).id(tv_id)?.last()?{
+        let tv = result.full()?;
+        if let Some(season)  = tv.season(season_number)?{
+            return Ok(())
+        }
     }
     let tv = get_tv(tv_id)?;
     let (person_ids, rsc_paths) = DATABASE.create_tv(&tv)?;
