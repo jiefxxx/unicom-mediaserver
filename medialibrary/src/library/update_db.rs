@@ -60,7 +60,7 @@ pub fn create_episode(user: &String, tv_id: u64, season_number: u64, episode_num
     if let Some(episode) = EpisodeSearch::new(user).tv(tv_id)?.season(season_number)?.episode(episode_number)?.last()?{
         return Ok(episode.id)
     }
-    create_tv(user, tv_id)?;
+    create_tv(user, tv_id, season_number)?;
     let episode = get_tv_episode(tv_id, season_number, episode_number)?;
     let (person_ids, rsc_paths) = DATABASE.create_episode(tv_id, &episode)?;
     for person_id in person_ids{
